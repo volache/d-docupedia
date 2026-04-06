@@ -21,7 +21,7 @@ export const ArticleView = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    
+
     if (isFirebaseEnabled && db && article?.id) {
       const trackView = async () => {
         try {

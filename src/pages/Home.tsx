@@ -288,8 +288,8 @@ export const HomeView = () => {
       </section>
 
       {/* Recommended Guides & dictionary Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <div className="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+        <div className="lg:col-span-2 bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm">
           <h3 className="text-xl font-bold text-slate-800 mb-8 flex items-center gap-3">
              <div className="w-1.5 h-6 bg-brand-500 rounded-full" />
              推薦閱讀指南
@@ -315,40 +315,54 @@ export const HomeView = () => {
           </div>
         </div>
 
-        <div className="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm flex flex-col">
-          <h3 className="text-xl font-bold text-slate-800 mb-8 flex items-center gap-3">
-             <div className="w-1.5 h-6 bg-slate-800 rounded-full" />
-             公文用語小辭典
-          </h3>
-          <div className="flex-1 bg-slate-50 rounded-3xl p-8 flex flex-col justify-center text-center relative overflow-hidden group">
-             <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
-                <Zap size={100} />
-             </div>
-             <div className="relative z-10 p-4">
-                <span className="bg-brand-100 text-brand-800 px-3 py-1 rounded-full text-xs font-bold mb-4 inline-block tracking-widest uppercase">今日推薦用語</span>
-                <h4 className="text-4xl font-black text-slate-900 mb-4 tracking-tighter">「{randomTerm.word}」</h4>
-                <p className="text-slate-500 leading-relaxed max-w-[200px] mx-auto text-sm">
-                  {randomTerm.definition}
-                </p>
-                {randomTerm.example && (
-                  <div className="mt-4 p-3 bg-white/50 rounded-xl text-[10px] text-slate-400 font-medium italic">
-                    例：{randomTerm.example}
-                  </div>
-                )}
-                <Link to="/learning" className="mt-6 text-brand-600 font-bold text-sm flex items-center gap-1 mx-auto hover:underline">
-                  查看更多字典內容 <ArrowRight size={16} />
-                </Link>
-             </div>
+        <div className="space-y-6">
+          <div className="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm flex flex-col">
+            <h3 className="text-xl font-bold text-slate-800 mb-8 flex items-center gap-3">
+               <div className="w-1.5 h-6 bg-slate-800 rounded-full" />
+               用語小辭典
+            </h3>
+            <div className="flex-1 bg-slate-50 rounded-3xl p-8 flex flex-col justify-center text-center relative overflow-hidden group">
+               <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                  <Zap size={100} />
+               </div>
+               <div className="relative z-10 p-4">
+                  <span className="bg-brand-100 text-brand-800 px-3 py-1 rounded-full text-xs font-bold mb-4 inline-block tracking-widest uppercase">今日推薦用語</span>
+                  <h4 className="text-4xl font-black text-slate-900 mb-4 tracking-tighter">「{randomTerm.word}」</h4>
+                  <p className="text-slate-500 leading-relaxed max-w-[200px] mx-auto text-sm">
+                    {randomTerm.definition}
+                  </p>
+                  {randomTerm.example && (
+                    <div className="mt-4 p-3 bg-white/50 rounded-xl text-[10px] text-slate-400 font-medium italic">
+                      例：{randomTerm.example}
+                    </div>
+                  )}
+                  <Link to="/learning" className="mt-6 text-brand-600 font-bold text-sm flex items-center gap-1 mx-auto hover:underline">
+                    查看更多字典內容 <ArrowRight size={16} />
+                  </Link>
+               </div>
+            </div>
           </div>
-          <div className="mt-6 grid grid-cols-2 gap-4">
-              <a href="http://192.168.116.16/IFDPortal_HUN/login.aspx" target="_blank" rel="noopener noreferrer" className="bg-slate-50 p-4 rounded-2xl text-slate-600 text-xs font-bold flex items-center justify-center gap-2 hover:bg-slate-100 transition-colors">
-                <ExternalLink size={14} /> 系統登入
+
+          <div className="grid grid-cols-2 gap-4">
+              <a 
+                href="http://192.168.116.16/IFDPortal_HUN/login.aspx" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex flex-col items-center justify-center gap-3 hover:shadow-md hover:border-brand-100 transition-all group"
+              >
+                <div className="w-12 h-12 bg-slate-50 text-slate-400 rounded-2xl flex items-center justify-center group-hover:bg-brand-50 group-hover:text-brand-600 transition-colors">
+                  <ExternalLink size={20} />
+                </div>
+                <span className="text-xs font-bold text-slate-600 group-hover:text-slate-900">系統登入</span>
               </a>
               <button 
                 onClick={() => showAlert('元件下載功能即將開放！')} 
-                className="bg-slate-50 p-4 rounded-2xl text-slate-600 text-xs font-bold flex items-center justify-center gap-2 hover:bg-slate-100 transition-colors"
+                className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex flex-col items-center justify-center gap-3 hover:shadow-md hover:border-brand-100 transition-all group"
               >
-                <ExternalLink size={14} /> 元件下載
+                <div className="w-12 h-12 bg-slate-50 text-slate-400 rounded-2xl flex items-center justify-center group-hover:bg-brand-50 group-hover:text-brand-600 transition-colors">
+                  <ExternalLink size={20} />
+                </div>
+                <span className="text-xs font-bold text-slate-600 group-hover:text-slate-900">元件下載</span>
               </button>
           </div>
         </div>
