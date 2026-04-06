@@ -1,0 +1,39 @@
+/*
+  Design System: Typography Standards
+  Project: Official Document Knowledge Platform (公文知識學伴)
+*/
+
+:root {
+  /* Font Families */
+  --font-main: 'Inter', 'Noto Sans TC', system-ui, sans-serif;
+
+  /* Typography Scale */
+  --text-2xs: 10px; /* Over-specialized/Tiny labels */
+  --text-xs: 12px;  /* Standard labels, table headers, captions */
+  --text-sm: 14px;  /* Body text, input text, buttons, tabs */
+  --text-base: 16px;/* Large body text, highlights */
+  --text-lg: 18px;  /* Section titles, subheadings */
+  --text-xl: 20px;  /* Page sub-titles */
+  --text-2xl: 24px; /* Admin page titles */
+  --text-3xl: 30px; /* Component titles */
+  --text-4xl: 36px; /* Article titles */
+
+  /* Admin Standards (以術語字典為準) */
+  --admin-table-header-size: var(--text-xs);
+  --admin-table-header-weight: 900; /* font-black */
+  --admin-table-header-color: #64748b; /* text-slate-500 */
+  
+  --admin-label-size: var(--text-xs);
+  --admin-label-weight: 900;
+  --admin-label-color: #94a3b8; /* text-slate-400 */
+  
+  --admin-tab-size: var(--text-sm);
+  --admin-tab-weight: 700; /* font-bold */
+}
+
+/* Tailwind Mapping Reference:
+   text-xs  = 0.75rem (12px)
+   text-sm  = 0.875rem (14px)
+   text-base = 1rem (16px)
+   text-lg   = 1.125rem (18px)
+*/
