@@ -7,6 +7,8 @@ import { db, isFirebaseEnabled } from '../lib/firebase';
 import { collection, getDocs, query, limit } from 'firebase/firestore';
 import { useArticleStore } from '../store/articleStore';
 import { useUiStore } from '../store/uiStore';
+import { useTitle } from '../hooks/useTitle';
+import { FAQAccordion } from '../components/article/ArticleBlocks';
 
 const iconMap: Record<string, any> = {
   PenTool,
@@ -16,6 +18,7 @@ const iconMap: Record<string, any> = {
 };
 
 export const HomeView = () => {
+  useTitle('首頁');
   const { articles } = useArticleStore();
   const { showAlert } = useUiStore();
   const [randomTerm, setRandomTerm] = useState(mockDictionaryTerm);
@@ -95,7 +98,7 @@ export const HomeView = () => {
           <motion.div 
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-gradient-to-br from-[#E8C5A8] to-[#D9A077] text-brand-900 p-8 sm:p-10 rounded-[2.5rem] relative overflow-hidden h-full flex flex-col justify-center shadow-2xl shadow-brand-900/10"
+            className="bg-gradient-to-br from-[#E8C5A8] to-[#D9A077] text-white p-8 sm:p-10 rounded-[2.5rem] relative overflow-hidden h-full flex flex-col justify-center shadow-2xl shadow-brand-900/10"
           >
             {/* Animated Background SVG */}
             <motion.div 
@@ -115,6 +118,7 @@ export const HomeView = () => {
             >
               <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" className="w-full h-full fill-brand-900">
                 <motion.path 
+                  initial={{ d: "M45.7,-76.1C58.9,-69.3,69.2,-55.4,77.2,-40.5C85.2,-25.6,90.9,-9.8,88.7,5.2C86.5,20.2,76.4,34.4,65.3,46.5C54.2,58.6,42.1,68.6,28.1,74.3C14.1,80,-1.8,81.4,-16.8,78.2C-31.8,75,-45.9,67.2,-57.4,56.1C-68.9,45,-77.8,30.6,-82.1,14.8C-86.4,-1,-86.1,-18.2,-79.5,-33.1C-72.9,-48,-60,-60.6,-45.4,-66.8C-30.8,-73,-15.4,-72.8,0.8,-74C17,-75.2,34,-77.8,45.7,-76.1Z" }}
                   animate={{
                     d: [
                       "M45.7,-76.1C58.9,-69.3,69.2,-55.4,77.2,-40.5C85.2,-25.6,90.9,-9.8,88.7,5.2C86.5,20.2,76.4,34.4,65.3,46.5C54.2,58.6,42.1,68.6,28.1,74.3C14.1,80,-1.8,81.4,-16.8,78.2C-31.8,75,-45.9,67.2,-57.4,56.1C-68.9,45,-77.8,30.6,-82.1,14.8C-86.4,-1,-86.1,-18.2,-79.5,-33.1C-72.9,-48,-60,-60.6,-45.4,-66.8C-30.8,-73,-15.4,-72.8,0.8,-74C17,-75.2,34,-77.8,45.7,-76.1Z",
@@ -134,17 +138,17 @@ export const HomeView = () => {
 
             <div className="relative z-10">
               <div className="inline-flex items-center gap-2 bg-white/30 backdrop-blur-md px-4 py-2 rounded-full text-brand-900 text-sm font-bold mb-6">
-                <Lightbulb size={18} className="text-white" />
+                <Lightbulb size={18} className="text-brand-900" />
                 每日公文小知識
               </div>
-              <h2 className="text-3xl sm:text-5xl font-black mb-6 leading-tight">
+              <h2 className="text-3xl sm:text-5xl font-black mb-6 leading-tight text-white">
                 {heroArticle?.promo_title || heroArticle?.title || '主旨撰寫要有力，動詞＋內容最清晰。'}
               </h2>
-              <p className="text-brand-900/80 text-xl mb-10 max-w-md leading-relaxed">
+              <p className="text-white/90 text-xl mb-10 max-w-md leading-relaxed">
                 {heroArticle?.promo_description || heroArticle?.summary || '良好的主旨應讓人一眼看出目的。'}
               </p>
               <Link 
-                to={heroArticle ? `/article/${heroArticle.id}` : '/learning'}
+                to={heroArticle ? `/article/${heroArticle.slug}` : '/learning'}
                 className="bg-brand-900 text-white px-8 py-4 rounded-full font-bold hover:bg-brand-800 transition-all shadow-lg hover:shadow-brand-900/20 inline-flex items-center gap-2"
               >
                 開始今日學習
@@ -223,7 +227,7 @@ export const HomeView = () => {
           {featuredTopics.length > 0 ? featuredTopics.map((topic, i) => (
             <motion.div key={topic.id} whileHover={{ y: -5 }}>
               <Link 
-                to={`/article/${topic.id}`}
+                to={`/article/${topic.slug}`}
                 className="block bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm hover:shadow-xl hover:shadow-brand-900/5 transition-all group"
               >
                 <div className="flex items-center justify-between mb-6">
@@ -294,7 +298,7 @@ export const HomeView = () => {
             {recommendedGuides.map((article) => (
               <motion.div key={article.id} whileHover={{ x: 5 }}>
                 <Link 
-                  to={`/article/${article.id}`} 
+                  to={`/article/${article.slug}`} 
                   className="flex items-center gap-4 p-4 rounded-2xl hover:bg-slate-50 transition-all border border-transparent hover:border-slate-100 group"
                 >
                   <div className="w-12 h-12 bg-orange-50 text-brand-600 rounded-xl flex items-center justify-center shrink-0">

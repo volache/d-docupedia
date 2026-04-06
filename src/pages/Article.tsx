@@ -9,28 +9,30 @@ import { db, isFirebaseEnabled } from '../lib/firebase';
 import { doc, updateDoc, increment } from 'firebase/firestore';
 import { useArticleStore } from '../store/articleStore';
 import { useUiStore } from '../store/uiStore';
+import { useTitle } from '../hooks/useTitle';
 
 export const ArticleView = () => {
   const { articles } = useArticleStore();
   const { showAlert } = useUiStore();
-  const { id } = useParams();
+  const { slug } = useParams();
   const navigate = useNavigate();
-  const article = articles.find(a => a.id === id);
+  const article = articles.find(a => a.slug === slug);
+  useTitle(article?.title || '載入中...');
 
   useEffect(() => {
     window.scrollTo(0, 0);
     
-    if (isFirebaseEnabled && db && id) {
+    if (isFirebaseEnabled && db && article?.id) {
       const trackView = async () => {
         try {
-          await updateDoc(doc(db, 'articles', id), {
+          await updateDoc(doc(db, 'articles', article.id), {
             views: increment(1)
           });
         } catch (e) { /* silent */ }
       };
       trackView();
     }
-  }, [id]);
+  }, [article?.id]);
 
   const handlePrint = () => window.print();
   const handleShare = async () => {
@@ -123,7 +125,7 @@ export const ArticleView = () => {
         </div>
       </header>
 
-      <main className="max-w-5xl mx-auto">
+      <main className="max-w-4xl mx-auto">
         {renderLayout()}
       </main>
     </motion.div>

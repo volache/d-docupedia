@@ -4,12 +4,14 @@ import { motion, AnimatePresence } from 'motion/react';
 import { mockCategories } from '../data';
 import { FileText, LayoutGrid, ArrowRight } from 'lucide-react';
 import { useArticleStore } from '../store/articleStore';
+import { useTitle } from '../hooks/useTitle';
 
 export const LearningView = () => {
   const { articles } = useArticleStore();
   const { slug } = useParams();
   
   const currentCategory = mockCategories.find(c => c.slug === slug);
+  useTitle(currentCategory ? `探索：${currentCategory.name}` : '學習中心');
   const filteredArticles = slug 
     ? articles.filter(a => a.category === slug)
     : articles;
@@ -74,7 +76,7 @@ export const LearningView = () => {
                 transition={{ delay: i * 0.05 }}
               >
                 <Link 
-                  to={`/article/${article.id}`}
+                  to={`/article/${article.slug}`}
                   className="group block bg-white rounded-[2.5rem] p-8 border border-slate-100 shadow-sm hover:shadow-xl hover:shadow-brand-900/5 transition-all h-full flex flex-col"
                 >
                   <div className="flex items-center justify-between mb-6">

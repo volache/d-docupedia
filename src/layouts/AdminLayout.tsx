@@ -1,10 +1,10 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
 import { AdminSidebar } from '../pages/admin/AdminSidebar';
-import { Bell, Search, User } from 'lucide-react';
+import { Bell, Search, User, LogOut } from 'lucide-react';
 import { useUiStore } from '../store/uiStore';
 
-export const AdminLayout = () => {
+export const AdminLayout = ({ onLogout }: { onLogout: () => void }) => {
   const { showAlert } = useUiStore();
   return (
     <div className="flex bg-slate-50 min-h-screen">
@@ -31,9 +31,14 @@ export const AdminLayout = () => {
                  <p className="text-sm font-bold text-slate-900 leading-none">系統管理員</p>
                  <p className="text-[10px] text-slate-500 mt-1">Super Admin</p>
                </div>
-               <div className="w-9 h-9 rounded-full bg-slate-800 text-white flex items-center justify-center font-bold text-sm">
-                 AD
-               </div>
+               <button 
+                 onClick={onLogout} 
+                 title="登出系統"
+                 className="w-9 h-9 rounded-full bg-slate-800 text-white flex items-center justify-center font-bold text-sm hover:bg-slate-700 transition-all group relative overflow-hidden"
+               >
+                 <span className="group-hover:opacity-0 transition-opacity">AD</span>
+                 <LogOut size={16} className="absolute inset-0 m-auto opacity-0 group-hover:opacity-100 transition-opacity" />
+               </button>
             </div>
           </div>
         </header>

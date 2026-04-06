@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
-import { Plus, Edit2, Trash2, Search, ChevronLeft, Save, X, Eye, FileText, List, Layout, Type, MoreVertical, GripVertical, AlertCircle, Calendar, MousePointer, Image as ImageIcon, MessageSquare, CheckCircle, Info, AlertTriangle, ArrowRight, Lightbulb, HelpCircle, GripHorizontal, Settings, Zap } from 'lucide-react';
+import { Plus, Edit2, Trash2, Search, ChevronLeft, Save, X, Eye, FileText, List, Layout, Type, MoreVertical, GripVertical, AlertCircle, Calendar, MousePointer, Image as ImageIcon, MessageSquare, CheckCircle, Info, AlertTriangle, ArrowRight, Lightbulb, HelpCircle, GripHorizontal, Settings, Zap, ExternalLink } from 'lucide-react';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { mockCategories, Article } from '../../data';
@@ -15,8 +16,10 @@ import { UnifiedLayout } from '../../layouts/UnifiedLayout';
 import { useArticleStore } from '../../store/articleStore';
 import { CustomSelect } from '../../components/ui/CustomSelect';
 import { useUiStore } from '../../store/uiStore';
+import { useTitle } from '../../hooks/useTitle';
 
 export const ArticleManager = () => {
+  useTitle('文章管理');
   const { articles, addArticle, updateArticle, deleteArticle } = useArticleStore();
   const { showConfirm, showAlert } = useUiStore();
   const [isEditing, setIsEditing] = useState(false);
@@ -552,8 +555,8 @@ export const ArticleManager = () => {
              {/* Table */}
              {block.type === 'table' && (
                <div className="space-y-6">
-                  {/* Softer Table Config Bar */}
-                  <div className="flex flex-wrap justify-between items-center bg-white p-5 rounded-[2rem] border border-slate-200 shadow-xl shadow-slate-100 flex-shrink-0">
+                  {/* Softer Table Config Bar - Sticky to help with long tables */}
+                  <div className="sticky top-0 z-20 flex flex-wrap justify-between items-center bg-white/90 backdrop-blur-md p-5 rounded-[2rem] border border-slate-200 shadow-xl shadow-slate-100 flex-shrink-0 mb-4 transition-all hover:bg-white hover:shadow-2xl">
                     <div className="flex items-center gap-8">
                        <div className="flex items-center gap-3">
                          <div className="w-8 h-8 rounded-xl bg-brand-50 text-brand-600 flex items-center justify-center">
@@ -805,9 +808,19 @@ export const ArticleManager = () => {
         ) : (
           <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} key="edit" className="space-y-6">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 sticky top-16 z-40 bg-slate-50/80 backdrop-blur-md py-4 border-b border-transparent transition-all">
-              <button onClick={handleBackToList} className="flex items-center gap-2 text-slate-500 hover:text-slate-900 font-bold transition-all bg-white/50 px-3 py-2 rounded-xl hover:bg-white">
-                <ChevronLeft size={20} /> 返回列表
-              </button>
+              <div className="flex items-center gap-4">
+                <button onClick={handleBackToList} className="flex items-center gap-2 text-slate-500 hover:text-slate-900 font-bold transition-all bg-white/50 px-3 py-2 rounded-xl hover:bg-white">
+                  <ChevronLeft size={20} /> 返回列表
+                </button>
+                <div className="h-6 w-px bg-slate-200 hidden md:block" />
+                <Link 
+                  to={`/article/${currentArticle.slug}`} 
+                  target="_blank" 
+                  className="flex items-center gap-2 text-brand-600 hover:text-brand-700 font-bold text-sm bg-white px-3 py-2 rounded-xl shadow-sm border border-brand-100 transition-all hover:-translate-y-0.5"
+                >
+                  <ExternalLink size={16} /> 前台預覽
+                </Link>
+              </div>
               
               <div className="flex items-center bg-slate-100 p-1 rounded-xl shadow-inner shrink-0">
                  <button 

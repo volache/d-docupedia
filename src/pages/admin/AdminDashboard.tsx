@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
-import { BookOpen, Users, Eye, TrendingUp, ArrowUpRight, ArrowDownRight, Calendar, CheckCircle, Clock, ChevronRight } from 'lucide-react';
+import { BookOpen, Users, Eye, TrendingUp, ArrowUpRight, ArrowDownRight, Calendar, CheckCircle, Clock, ChevronRight, FileText } from 'lucide-react';
 import { mockArticles, Article, mockCategories } from '../../data';
 import { db, isFirebaseEnabled } from '../../lib/firebase';
 import { doc, setDoc } from 'firebase/firestore';
@@ -13,6 +13,7 @@ export const AdminDashboard = () => {
   const { articles } = useArticleStore();
   const { showConfirm, showAlert } = useUiStore();
   const [chartTimeRange, setChartTimeRange] = useState('week');
+  
   const handleSeedData = async () => {
     if (!db || !(await showConfirm('此操作將會把現有的模擬資料上傳至 Firestore。確定繼續？'))) return;
     
@@ -90,7 +91,7 @@ export const AdminDashboard = () => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Activity Distribution - Custom SVG Chart */}
+        {/* Activity Distribution */}
         <div className="lg:col-span-2 bg-white p-8 rounded-[2.5rem] border border-slate-200 shadow-sm">
            <div className="flex items-center justify-between mb-8">
               <div>
@@ -109,7 +110,6 @@ export const AdminDashboard = () => {
            </div>
            
            <div className="h-64 relative mt-10">
-              {/* Simple CSS/SVG chart */}
               <div className="absolute inset-0 flex items-end justify-between px-4">
                  {[40, 65, 45, 90, 75, 40, 60].map((h, i) => (
                    <div key={i} className="w-12 flex flex-col items-center gap-3">
@@ -122,7 +122,6 @@ export const AdminDashboard = () => {
                          >
                             <div className="absolute bottom-0 left-0 w-full bg-brand-600 rounded-full" style={{ height: '2px' }} />
                          </motion.div>
-                         {/* Tooltip */}
                          <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-[10px] py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-xl">
                             {h} 訪客
                          </div>
@@ -215,24 +214,3 @@ export const AdminDashboard = () => {
     </div>
   );
 };
-
-const FileText = ({ size, className }: { size: number, className?: string }) => (
-  <svg 
-    xmlns="http://www.w3.org/2000/svg" 
-    width={size} 
-    height={size} 
-    viewBox="0 24 24" 
-    fill="none" 
-    stroke="currentColor" 
-    strokeWidth="2" 
-    strokeLinecap="round" 
-    strokeLinejoin="round" 
-    className={className}
-  >
-    <path d="M14.5 2H6a2 2 0 0-2h12a2 0 0 2 2z" />
-    <polyline points="14 2 8 20" />
-    <line x1="16" y1="13" x2="8" y2="13" />
-    <line x1="16" y1="17" x2="8" y2="17" />
-    <line x1="10" y1="9" x2="8" y2="9" />
-  </svg>
-);

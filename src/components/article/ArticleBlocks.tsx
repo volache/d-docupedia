@@ -4,7 +4,7 @@ import * as LucideIcons from 'lucide-react';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
-const { Lightbulb, Info, AlertTriangle, CheckCircle, Zap } = LucideIcons;
+const { Lightbulb, Info, AlertTriangle, CheckCircle, Zap, HelpCircle } = LucideIcons;
 
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -117,7 +117,7 @@ export const StepItem = ({ step, title, description, pro_tip, icon, index }: any
 
 // Table Block
 export const TableBlock = ({ headers, rows, hasRowHeader = false }: { headers: string[], rows: string[][], hasRowHeader?: boolean }) => (
-  <div className="my-10 max-w-3xl mx-auto overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-xl shadow-slate-200/50">
+  <div className="my-10 max-w-4xl mx-auto overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-xl shadow-slate-200/50">
     <div className="overflow-x-auto">
       <table className="w-full text-left border-collapse min-w-[500px]">
         <thead>
@@ -152,3 +152,62 @@ export const TableBlock = ({ headers, rows, hasRowHeader = false }: { headers: s
     </div>
   </div>
 );
+
+// Interactive FAQ Block
+import { ChevronDown } from 'lucide-react';
+import { AnimatePresence } from 'motion/react';
+
+export const FAQAccordion = ({ question, answer }: { question: string, answer: string }) => {
+  const [isOpen, setIsOpen] = React.useState(false);
+
+  return (
+    <div className="max-w-4xl mx-auto mb-4">
+      <div 
+        className={cn(
+          "bg-white rounded-2xl border transition-all overflow-hidden",
+          isOpen ? "shadow-md border-brand-100" : "shadow-sm border-slate-100 hover:border-slate-300"
+        )}
+      >
+        <button 
+          onClick={() => setIsOpen(!isOpen)}
+          className="w-full flex items-center justify-between p-6 text-left"
+        >
+          <div className="flex gap-4">
+            <div className={cn(
+              "w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-colors",
+              isOpen ? "bg-brand-600 text-white" : "bg-brand-50 text-brand-600"
+            )}>
+              <HelpCircle size={18} />
+            </div>
+            <h3 className={cn(
+              "font-bold text-lg transition-colors",
+              isOpen ? "text-brand-900" : "text-slate-800"
+            )}>
+              {question}
+            </h3>
+          </div>
+          <motion.div
+            animate={{ rotate: isOpen ? 180 : 0 }}
+            className={cn("shrink-0 ml-4", isOpen ? "text-brand-500" : "text-slate-300")}
+          >
+            <ChevronDown size={20} />
+          </motion.div>
+        </button>
+        <AnimatePresence>
+          {isOpen && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.2 }}
+            >
+              <div className="px-6 pb-6 pt-0 text-slate-600 leading-relaxed pl-[3.5rem]">
+                {answer}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    </div>
+  );
+};

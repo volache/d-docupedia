@@ -1,5 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -14,11 +15,13 @@ const firebaseConfig = {
 const isFirebaseEnabled = !!import.meta.env.VITE_FIREBASE_API_KEY;
 
 let db: any = null;
+let auth: any = null;
 
 if (isFirebaseEnabled) {
   try {
     const app = initializeApp(firebaseConfig);
     db = getFirestore(app);
+    auth = getAuth(app);
     console.log('Firebase initialized successfully.');
   } catch (error) {
     console.error('Firebase initialization failed:', error);
@@ -27,4 +30,4 @@ if (isFirebaseEnabled) {
   console.warn('Firebase configuration missing. Running in Static/Local mode.');
 }
 
-export { db, isFirebaseEnabled };
+export { db, auth, isFirebaseEnabled };

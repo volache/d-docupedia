@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useMemo, lazy, Suspense } from 'react';
-import { Routes, Route, Link, NavLink, useLocation } from 'react-router-dom';
+import { Routes, Route, Link, NavLink, useLocation, Navigate } from 'react-router-dom';
 import { collection, onSnapshot, query, orderBy } from 'firebase/firestore';
-import { Home, BookOpen, HelpCircle, Search, Settings, Menu, X, FileText, User, Users } from 'lucide-react';
+import { Home, BookOpen, HelpCircle, Search, Settings, Menu, X, FileText, User, Users, Lock, LogIn } from 'lucide-react';
 import { Article } from './data';
 import { db, isFirebaseEnabled } from './lib/firebase';
 import { useArticleStore } from './store/articleStore';
-import { useUserStore } from './store/userStore';
+import { useUserStore, User as UserType } from './store/userStore';
 
-// Lazy loading components to improve initial load performance
+// Lazy loading components
 const HomeView = lazy(() => import('./pages/Home').then(m => ({ default: m.HomeView })));
 const ArticleView = lazy(() => import('./pages/Article').then(m => ({ default: m.ArticleView })));
 const LearningView = lazy(() => import('./pages/Learning').then(m => ({ default: m.LearningView })));
@@ -41,18 +41,89 @@ const UserManagerPlaceholder = () => (
   </div>
 );
 
+const AdminLogin = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [isLoging, setIsLoging] = useState(false);
+  const { login } = useUserStore();
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    setIsLoging(true);
+    
+    const success = await login(email, password);
+    if (success) {
+      setIsLoging(false);
+    } else {
+      setError('帳號或密碼錯誤 (admin@example.com / 123456)');
+      setIsLoging(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6">
+      <div className="w-full max-w-md bg-white rounded-[2.5rem] shadow-2xl shadow-slate-200/50 p-10 border border-slate-100">
+        <div className="flex flex-col items-center mb-10">
+          <div className="w-16 h-16 bg-brand-600 rounded-2xl flex items-center justify-center text-white mb-6 shadow-lg shadow-brand-600/20">
+            <Lock size={32} />
+          </div>
+          <h2 className="text-2xl font-black text-slate-900">系統管理登入</h2>
+          <p className="text-slate-400 text-sm mt-2">開發者模式：請輸入預設帳密</p>
+        </div>
+
+        <form onSubmit={handleLogin} className="space-y-6">
+          <div className="space-y-2">
+            <label className="text-xs font-bold text-slate-400 uppercase tracking-widest ml-1">電子郵件</label>
+            <input 
+              type="email" 
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full px-5 py-4 bg-slate-50 border border-transparent focus:bg-white focus:border-brand-200 focus:ring-4 focus:ring-brand-50 rounded-2xl outline-none transition-all"
+              placeholder="admin@example.com"
+            />
+          </div>
+          <div className="space-y-2">
+            <label className="text-xs font-bold text-slate-400 uppercase tracking-widest ml-1">密碼</label>
+            <input 
+              type="password" 
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full px-5 py-4 bg-slate-50 border border-transparent focus:bg-white focus:border-brand-200 focus:ring-4 focus:ring-brand-50 rounded-2xl outline-none transition-all"
+              placeholder="123456"
+            />
+          </div>
+          
+          {error && <p className="text-red-500 text-sm font-medium text-center">{error}</p>}
+
+          <button 
+            type="submit" 
+            disabled={isLoging}
+            className="w-full bg-slate-900 text-white py-4 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-slate-800 transition-all disabled:opacity-50"
+          >
+            {isLoging ? '登入中...' : '進入後台'}
+            <LogIn size={20} />
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+};
+
 export default function App() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   
-  // Zustand Stores
   const { articles, loading, setArticles, setLoading } = useArticleStore();
-  const { user } = useUserStore();
+  const { user, isAuthenticated, isLoading, logout } = useUserStore();
   
   const location = useLocation();
   const isAdminPath = location.pathname.startsWith('/admin');
 
-  // Real-time data syncing from Firestore
+  // Firestore 資料同步 (不依賴 Auth)
   useEffect(() => {
     if (!isFirebaseEnabled || !db) {
       setLoading(false);
@@ -62,7 +133,6 @@ export default function App() {
     setLoading(true);
     const q = query(collection(db, 'articles'), orderBy('updated_at', 'desc'));
     
-    // Using onSnapshot for real-time updates across all clients
     const unsubscribe = onSnapshot(q, (snapshot) => {
       if (!snapshot.empty) {
         const firestoreArticles = snapshot.docs.map(doc => ({
@@ -84,7 +154,6 @@ export default function App() {
     a.title.includes(searchQuery) || a.summary.includes(searchQuery)
   );
 
-  // 動態獲取精選主題 (用於側邊欄)
   const featuredArticles = useMemo(() => {
     return articles.filter(a => a.tags.includes('精選') || a.tags.includes('初學者')).slice(0, 3);
   }, [articles]);
@@ -97,18 +166,26 @@ export default function App() {
 
   const isBespokeArticle = useMemo(() => {
     if (location.pathname.startsWith('/article/')) {
-      const id = location.pathname.split('/')[2];
-      const article = articles.find(a => a.id === id);
+      const slug = location.pathname.split('/')[2];
+      const article = articles.find(a => a.slug === slug);
       return article?.article_type === 'bespoke';
     }
     return false;
   }, [location.pathname, articles]);
 
+  const handleLogout = () => {
+    logout();
+  };
+
+  if (isLoading) return <LoadingSpinner />;
+
   if (isAdminPath) {
+    if (!isAuthenticated) return <AdminLogin />;
+
     return (
       <Suspense fallback={<LoadingSpinner />}>
         <Routes>
-          <Route path="/admin" element={<AdminLayout />}>
+          <Route path="/admin" element={<AdminLayout onLogout={handleLogout} />}>
             <Route index element={<AdminDashboard />} />
             <Route path="articles" element={<ArticleManager />} />
             <Route path="dictionary" element={<DictionaryManager />} />
@@ -127,7 +204,7 @@ export default function App() {
       <div className="min-h-screen bg-slate-950">
         <Suspense fallback={<LoadingSpinner />}>
           <Routes>
-            <Route path="/article/:id" element={<ArticleView />} />
+            <Route path="/article/:slug" element={<ArticleView />} />
           </Routes>
         </Suspense>
         <CustomModal />
@@ -137,7 +214,6 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-bg-base flex">
-      {/* Mobile Menu Overlay */}
       {isMobileMenuOpen && (
         <div 
           className="fixed inset-0 bg-black/20 z-40 lg:hidden"
@@ -145,7 +221,6 @@ export default function App() {
         />
       )}
 
-      {/* Sidebar */}
       <aside className={`
         fixed lg:sticky top-0 left-0 z-50 h-screen w-64 bg-bg-sidebar border-r border-slate-200/50 flex flex-col transition-transform duration-300 ease-in-out
         ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
@@ -188,7 +263,7 @@ export default function App() {
           {featuredArticles.length > 0 ? featuredArticles.map(article => (
             <Link 
               key={article.id} 
-              to={`/article/${article.id}`}
+              to={`/article/${article.slug}`}
               className="flex items-center gap-3 px-4 py-2 text-sm text-slate-500 hover:text-brand-600 transition-colors"
             >
               <div className="w-1.5 h-1.5 rounded-full bg-slate-300" />
@@ -207,7 +282,6 @@ export default function App() {
         </div>
       </aside>
 
-      {/* Main Content */}
       <main className="flex-1 flex flex-col min-w-0">
         <header className="sticky top-0 z-30 bg-bg-base/80 backdrop-blur-md border-b border-slate-200/50 px-4 sm:px-8 py-4 flex items-center justify-between">
           <div className="flex items-center gap-4 flex-1">
@@ -218,7 +292,6 @@ export default function App() {
               <Menu size={24} />
             </button>
             
-            {/* Search Bar */}
             <div className="hidden sm:flex relative max-w-md w-full group">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-brand-500" size={18} />
               <input 
@@ -229,7 +302,6 @@ export default function App() {
                 className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-transparent focus:bg-white focus:border-brand-200 focus:ring-4 focus:ring-brand-50 rounded-2xl text-sm transition-all outline-none"
               />
               
-              {/* Search Results Dropdown */}
               {searchQuery && (
                 <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-2xl border border-slate-100 overflow-hidden z-50">
                   <div className="p-4 border-b border-slate-50 bg-slate-50/50">
@@ -240,7 +312,7 @@ export default function App() {
                       filteredArticles.map(article => (
                         <Link 
                           key={article.id}
-                          to={`/article/${article.id}`}
+                          to={`/article/${article.slug}`}
                           onClick={() => setSearchQuery('')}
                           className="flex items-start gap-3 p-4 hover:bg-brand-50 transition-colors border-b border-slate-50 last:border-0 group"
                         >
@@ -282,7 +354,7 @@ export default function App() {
             <Suspense fallback={<LoadingSpinner />}>
               <Routes>
                 <Route path="/" element={<HomeView />} />
-                <Route path="/article/:id" element={<ArticleView />} />
+                <Route path="/article/:slug" element={<ArticleView />} />
                 <Route path="/learning" element={<LearningView />} />
                 <Route path="/learning/:slug" element={<LearningView />} />
                 <Route path="/faq" element={<FaqView />} />
