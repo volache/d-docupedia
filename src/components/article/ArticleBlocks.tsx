@@ -1,8 +1,10 @@
 import React from 'react';
 import { motion } from 'motion/react';
-import { Lightbulb, Info, AlertTriangle, CheckCircle, ArrowRight, Download } from 'lucide-react';
+import * as LucideIcons from 'lucide-react';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
+
+const { Lightbulb, Info, AlertTriangle, CheckCircle, Zap } = LucideIcons;
 
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -104,9 +106,49 @@ export const StepItem = ({ step, title, description, pro_tip, icon, index }: any
     </div>
     <div className="flex-1 w-full max-w-sm aspect-video bg-white rounded-3xl shadow-xl shadow-brand-900/5 border border-slate-100 flex items-center justify-center group cursor-pointer hover:-translate-y-1 transition-all">
        <div className="w-20 h-20 bg-brand-50 rounded-2xl flex items-center justify-center text-brand-600 group-hover:scale-110 transition-transform">
-         {/* Icon would be rendered here via Lucide dynamic mapping if needed, or static placeholder */}
-         <Lightbulb size={40} />
+         {(() => {
+           const DynamicIcon = (LucideIcons as any)[icon] || (LucideIcons as any)['Zap'];
+           return <DynamicIcon size={40} />;
+         })()}
        </div>
     </div>
   </motion.div>
+);
+
+// Table Block
+export const TableBlock = ({ headers, rows, hasRowHeader = false }: { headers: string[], rows: string[][], hasRowHeader?: boolean }) => (
+  <div className="my-10 max-w-3xl mx-auto overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-xl shadow-slate-200/50">
+    <div className="overflow-x-auto">
+      <table className="w-full text-left border-collapse min-w-[500px]">
+        <thead>
+          <tr className="bg-slate-50/80 border-b border-slate-200">
+            {(headers || []).map((header, i) => (
+              <th key={i} className="px-6 py-5 text-[10px] font-black text-slate-500 uppercase tracking-widest whitespace-nowrap">
+                {header}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-slate-100">
+          {(rows || []).map((row, rowIdx) => (
+            <tr key={rowIdx} className="group hover:bg-slate-50/30 transition-colors">
+              {(row || []).map((cell, cellIdx) => (
+                <td 
+                  key={cellIdx} 
+                  className={cn(
+                    "px-6 py-5 text-sm leading-relaxed whitespace-pre-wrap",
+                    hasRowHeader && cellIdx === 0 
+                      ? "bg-slate-50/50 font-black text-slate-900 border-r border-slate-100 w-1/4" 
+                      : "text-slate-600 font-medium"
+                  )}
+                >
+                  {cell}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </div>
 );

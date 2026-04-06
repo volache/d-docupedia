@@ -100,6 +100,97 @@ export const mockArticles: Article[] = [
         }
       ]
     }
+  },
+  {
+    id: 'special-master',
+    title: '行政轉型全紀錄：從封泥到 AI 的兩千年長征',
+    slug: 'administrative-evolution-master',
+    category: 'writing',
+    article_type: 'bespoke',
+    summary: '這是一部敘事性視覺史詩。我們將從漢代的封泥開始，橫跨兩千年，見證行政體系如何轉化為智慧數據。',
+    tags: ['特輯', '數位轉型', '視覺故事', '獨家'],
+    updated_at: '2024-04-06',
+    content: {
+      sections: [
+        {
+          type: 'hero',
+          title: "文字的重量：轉型史詩",
+          subtitle: "在 AI 與數據的時代，重新定義機關的行政靈魂。",
+          image: "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&q=80&w=2070",
+          tag: "Visual Essay Masterpiece"
+        },
+        {
+          type: 'marquee',
+          words: ["SPEED", "TRANSPARENCY", "DIGITAL", "HISTORY", "AI", "TRUST", "FUTURE"]
+        },
+        {
+          type: 'stats',
+          items: [
+            { label: "平均處理時間", value: "0.8d", description: "從漢代馬車傳遞到今日的電子交換，效能提升超過萬倍。" },
+            { label: "每年節省成本", value: "$42M", description: "全國機關實現無紙化後，顯著降低的人力與郵寄支出。" },
+            { label: "電子交換率", value: "99.2%", description: "台灣行政體系已全面邁向虛擬化與自動化。" }
+          ]
+        },
+        {
+          type: 'feature_card',
+          title: "AI 輔助分文：效率的奇點",
+          content: "過去需要專人逐件判讀的複雜公文，現在透過 AI 可以在 0.5 秒內完成分類並精準投遞。這不是取代人類，而是解放行政人員的創造力，讓專業回歸專業。",
+          image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&q=80&w=2070",
+          tag: "Tech Innovation",
+          button_text: "查看 AI 技術白皮書"
+        },
+        {
+           type: 'scrollytelling',
+           items: [
+             {
+               title: "封泥與簡牘：信譽的起源",
+               content: "早在兩千年前，為了保障機關秘密，公務員使用特製粘土覆蓋接縫並蓋上官印。這是人類行政史上最早的身分驗證 (Identity Verification)。",
+               image: "https://images.unsplash.com/photo-1532153975070-2e9ab71f1b14?auto=format&fit=crop&q=80&w=2070"
+             },
+             {
+               title: "非同步協作：效率的釋放",
+               content: "現代數位公文不再受限於紙本的線性流動。多人即時編修、跨部會同步核稿，讓整座機關的智慧在雲端即時同步。",
+               image: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=2070"
+             }
+           ]
+        },
+        {
+          type: 'timeline',
+          items: [
+            { date: "漢代", title: "封泥制度", content: "使用泥土封存簡牘，開創行政保密機制。" },
+            { date: "1995", title: "網路系統啟蒙", content: "台灣啟動政府網路化，公文開始出現數位登記。" },
+            { date: "2024", title: "智慧行政時代", content: "引入大型語言模型輔助校對，處理效率達到分鐘級。" }
+          ]
+        },
+        {
+          type: 'comparison',
+          title: "典範轉移：行政美學",
+          subtitle: "從繁瑣的官樣文章，轉化為直覺、高效的數位體制。",
+          left: {
+            title: "傳統威權範式",
+            items: ["本案經查係屬...", "依據前揭函示辦理...", "祈請 鈞長核示。"]
+          },
+          right: {
+            title: "現代專業範式",
+            items: ["1. 建立數據導向決策", "2. 推動跨機關透明協作", "3. 全程數位化追蹤"]
+          }
+        },
+        {
+          type: 'quote',
+          text: "好的公文不是寫給你看的，<br/>是寫給未來的公務員參考的。",
+          author: "數位政務委員 (2025)"
+        },
+        {
+          type: 'glitch_text',
+          text: "ADAPT OR OBSOLETE",
+          subtitle: "進化，是行政體系唯一的生存之道。"
+        },
+        {
+          type: 'footer',
+          text: "全域視覺特輯：致所有在位元中前行的行政人員"
+        }
+      ]
+    }
   }
 ];
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Plus, Edit2, Trash2, Search, ChevronLeft, Save, X, Book, Loader2, Tag, AlertCircle, CheckCircle2, HelpCircle } from 'lucide-react';
+import { Plus, Edit2, Trash2, Search, ChevronLeft, Save, X, Book, Loader2, Tag, AlertCircle, CheckCircle2, HelpCircle, Settings } from 'lucide-react';
 import { db, isFirebaseEnabled } from '../../lib/firebase';
 import { collection, onSnapshot, addDoc, updateDoc, deleteDoc, doc, query, orderBy } from 'firebase/firestore';
 import { useUiStore } from '../../store/uiStore';
@@ -204,7 +204,7 @@ export const DictionaryManager = () => {
           </motion.div>
         ) : (
           <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} key="edit" className="space-y-6">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between sticky top-16 z-40 bg-slate-50/80 backdrop-blur-md py-4 transition-all">
               <button onClick={handleBackToList} className="flex items-center gap-2 text-slate-500 hover:text-slate-900 font-bold transition-colors">
                 <ChevronLeft size={20} /> 返回列表
               </button>
@@ -276,8 +276,12 @@ export const DictionaryManager = () => {
                </div>
 
                <div className="lg:col-span-1 space-y-6">
-                  <aside className="bg-white p-8 rounded-[2rem] border border-slate-200 shadow-sm space-y-8 sticky top-6">
-                     <h4 className="font-bold text-slate-900 border-b border-slate-100 pb-4 text-lg">分類屬性</h4>
+                  <aside className="bg-white p-8 rounded-[2rem] border border-slate-200 shadow-xl shadow-slate-200/40 flex flex-col gap-8 sticky top-40 transition-all">
+                     <div className="flex items-center gap-2 text-slate-400">
+                        <Settings size={16} />
+                        <h4 className="font-black text-slate-900 text-lg uppercase tracking-tight">分類屬性</h4>
+                     </div>
+                     <div className="h-px bg-slate-100 w-full" />
                      
                      <div className="space-y-3">
                         <label className="text-xs font-black text-slate-500 uppercase tracking-widest block">詞條類別</label>

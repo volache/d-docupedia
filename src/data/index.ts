@@ -1,4 +1,4 @@
-export type ArticleType = 'guide' | 'workflow' | 'faq' | 'example' | 'system_tutorial';
+export type ArticleType = 'guide' | 'workflow' | 'faq' | 'example' | 'system_tutorial' | 'bespoke';
 
 export interface Article {
   id: string;

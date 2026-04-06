@@ -2,11 +2,8 @@ import React, { useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import { mockCategories, Article } from '../data';
-import { GuideLayout } from '../layouts/GuideLayout';
-import { WorkflowLayout } from '../layouts/WorkflowLayout';
-import { FaqLayout } from '../layouts/FaqLayout';
-import { ExampleLayout } from '../layouts/ExampleLayout';
-import { SystemTutorialLayout } from '../layouts/SystemTutorialLayout';
+import { BespokeLayout } from '../layouts/BespokeLayout';
+import { UnifiedLayout } from '../layouts/UnifiedLayout';
 import { ChevronLeft, Calendar, Tag, Share2, Printer } from 'lucide-react';
 import { db, isFirebaseEnabled } from '../lib/firebase';
 import { doc, updateDoc, increment } from 'firebase/firestore';
@@ -53,15 +50,23 @@ export const ArticleView = () => {
   const category = mockCategories.find(c => c.slug === article.category);
 
   const renderLayout = () => {
-    switch (article.article_type) {
-      case 'guide': return <GuideLayout content={article.content} />;
-      case 'workflow': return <WorkflowLayout content={article.content} />;
-      case 'faq': return <FaqLayout content={article.content} />;
-      case 'example': return <ExampleLayout content={article.content} />;
-      case 'system_tutorial': return <SystemTutorialLayout content={article.content} />;
-      default: return null;
+    if (article.article_type === 'bespoke') {
+      return <BespokeLayout content={article.content} />;
     }
+    return <UnifiedLayout content={article.content} />;
   };
+
+  if (article.article_type === 'bespoke') {
+    return (
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="article-bespoke">
+        <Link to="/" className="fixed top-6 left-6 z-[100] bg-black/20 backdrop-blur-md p-3 rounded-full hover:bg-black/40 transition-all text-white border border-white/10 flex items-center gap-2 pr-6 shadow-2xl">
+           <ChevronLeft size={20} />
+           <span className="text-sm font-bold uppercase tracking-widest">返回首頁</span>
+        </Link>
+        {renderLayout()}
+      </motion.div>
+    );
+  }
 
   return (
     <motion.div 

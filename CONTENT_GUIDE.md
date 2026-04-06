@@ -9,82 +9,97 @@
 
 ---
 
-## 🎯 核心原則 (General Principles)
-1.  **拒絕長篇大論：** 嚴禁使用超過 3 行的大段落文字。
-2.  **視覺化思考：** 優先使用**條列式 (Bullets)**、**表格**與**對比**。
-3.  **口語化專業：** 用專業但白話的方式解釋法條（例如：不要只說「依據某某法第幾條」，要說「簡單來說，這條規定是為了確保...」）。
-4.  **行銷勾子：** 標題要吸引人，摘要要能解決痛點。
+## 🏗️ 系統支援的文章格式 (Article Types)
+
+本系統支援兩種主要的渲染模式，AI Agent 應根據內容複雜度選擇適合的 `article_type`：
+
+1.  **通用模式 (`guide`, `workflow`, `faq`, `example`, `system_tutorial`)**: 適用於大多數純教學內容，由多個內容區塊 (Blocks) 組成。
+2.  **客製看板模式 (`bespoke`)**: 適用於具有強烈視覺衝擊力的宣傳頁或深度專題，由多個區塊 (Sections) 組成。
 
 ---
 
-## 🏗️ 文章格式與撰寫要點 (Format Guidelines)
+## 📥 資料結構 (JSON Schema)
 
-### 1. 行政指南 (Guide) - 知識百科型
-*   **用途：** 解釋抽象的概念、法規或撰寫規範。
-*   **關鍵組件：**
-    *   **精華摘要：** 放在最前面，30 字內總結核心價值。
-    *   **重點提示 (Callout)：** 使用「TIP」標記專業小技巧或常見誤區。
-    *   **正誤範例 (Example Block)：** 必須提供「錯誤寫法」與「正確寫法」的對照。
-
-### 2. 標準流程 (Workflow) - 執行手冊型
-*   **用途：** 說明任務的先後順序（如：簽辦流程、發文程序）。
-*   **關鍵組件：**
-    *   **里程碑化：** 拆解為 3-5 個關鍵步驟。
-    *   **動作導向：** 每個步驟標題必須以「動詞」開頭（如：擬稿、核稿、判行）。
-    *   **專業建議 (Pro Tip)：** 為每個步驟提供一個加速效率的獨家建議。
-
-### 3. 常見問題 (FAQ) - 疑難排解型
-*   **用途：** 針對特定主題的 Q&A 彙整。
-*   **關鍵組件：**
-    *   **使用者視角提問：** 題目應模擬真實員工的口吻（如：「為什麼我的自然人憑證讀不到？」）。
-    *   **結論先行：** 答案的第一句話就要給出解決方案。
-
-### 4. 範例對照 (Example) - 模板參考型
-*   **用途：** 展示具體的公文範本與適用場景。
-*   **關鍵組件：**
-    *   **適用場景 (Use Cases)：** 列出 3 個建議使用此範本的時機。
-    *   **關鍵解析：** 說明範本中絕對不可改動的關鍵用語。
-
-### 5. 系統教學 (Tutorial) - 軟體操作型
-*   **用途：** 針對電子簽核系統等軟體的手把手操作說明。
-*   **關鍵組件：**
-    *   **清晰路徑：** 描述完整路徑（如：選單 > 個人設定 > 簽章上傳）。
-    *   **精確動作：** 明確區分「點擊」、「選擇」或「輸入」。
-    *   **媒體預留：** 標註 [圖片佔位符] 並說明該截圖應顯示的畫面內容。
-
----
-
-## 🚀 行銷包裝欄位 (Marketing Metadata)
-每篇文章均需附帶以下欄位，用於**首頁大卡片 (Hero Card)** 宣傳：
-
-*   **首頁推廣金句 (promo_title)：**
-    *   *要求：* 帶有節奏感，強調「解決痛點」或「提升效率」。
-    *   *範例：* 「別讓附件格式成為退件的理由：三分鐘搞定 PDF 合併。」
-*   **首頁推廣引言 (promo_description)：**
-    *   *要求：* 語氣親切，像在推薦好工具給朋友。
-    *   *範例：* 「我們整理了最常被退件的五大原因，讓你避開行政雷區，發文一次就過。」
-
----
-
-## 📥 資料結構 (JSON Output Reference)
-撰寫時請遵循以下 JSON 結構：
+### 1. 基礎元數據 (Metadata)
+所有文章必須包含以下基礎欄位：
 
 ```json
 {
   "title": "文章標題",
-  "summary": "文章摘要",
+  "summary": "文章摘要 (30-50字，用於列表顯示)",
   "category": "writing | process | records | system",
-  "article_type": "guide | workflow | faq | example | system_tutorial",
-  "tags": ["標籤1", "每日推薦"],
-  "promo_title": "首頁金句",
-  "promo_description": "首頁引言",
+  "article_type": "guide | workflow | faq | example | system_tutorial | bespoke",
+  "tags": ["新發佈", "每日推薦"],
+  "promo_title": "首頁金句 (行銷感標題)",
+  "promo_description": "首頁引言 (親切的推廣文字)",
   "content": {
-    // 依據類型填入對應資料：
-    // guide -> blocks[]
-    // workflow -> steps[]
-    // faq -> faqs[]
-    // example -> use_cases[], description
-    // system_tutorial -> steps[] (含 action 欄位)
+    "blocks": [], // 如果 article_type 不是 bespoke，填入此處
+    "sections": [] // 如果 article_type 是 bespoke，填入此處
   }
 }
 ```
+
+---
+
+## 🧩 通用區塊元件 (Universal Blocks)
+用於 `content.blocks` 陣列中，每個物件必須有 `type` 屬性。
+
+| 區塊類型 (`type`) | 欄位說明 | 建議用途 |
+| :--- | :--- | :--- |
+| `text` | `content: string` | 通用段落，支援 Markdown 換行。 |
+| `summary` | `content: string` | **內容精華**。每篇文章建議至少有一個。 |
+| `callout` | `style: "tip"\|"info"\|"warning"`, `title: string`, `content: string` | 提示、補充或警告資訊。 |
+| `example` | `title: string`, `items: [{ label, content, variant: "success"\|"error" }]` | **正誤範例對比**。 |
+| `step` | `title, description, pro_tip, icon` (Lucide 名稱) | **工作流程步驟**。 |
+| `system_step` | `title, description, action, image_url` | **軟體操作教學**。 |
+| `table` | `headers: string[], rows: string[][], is_row_header: boolean` | 格式化數據對照。 |
+| `faq` | `question: string, answer: string` | 常見問題疑難排解。 |
+| `use_case` | `content: string` | 列舉適用的場景。 |
+
+---
+
+## 🎨 視覺化客製區塊 (Bespoke Sections)
+僅用於 `article_type: "bespoke"` 的 `content.sections` 陣列。
+
+| 區塊類型 (`type`) | 關鍵欄位 | 備註 |
+| :--- | :--- | :--- |
+| `hero` | `title, tag, subtitle, image` | 頁面大頭。 |
+| `marquee` | `words: string[]` | 橫向滾動的跑馬燈文字。 |
+| `stats` | `items: [{ label, value, description }]` | 數據展示。 |
+| `feature_card` | `title, tag, content, image, button_text, variant: "default"\|"reverse"` | 特色功能介紹。 |
+| `scrollytelling` | `items: [{ title, content, image }]` | 捲動式敘事。 |
+| `timeline` | `items: [{ date, title, content }]` | 歷史沿革或演進流程。 |
+| `comparison` | `title, left: { title, items }, right: { title, items }` | 重大典範移轉對比。 |
+| `quote` | `text, author` | 語錄或金句。 |
+| `glitch_text` | `text, subtitle` | 數位感故障效果文字。 |
+
+---
+
+## ✍️ 撰寫規範與設計美學
+
+### 1. 圖示選擇 (Icons)
+若區塊支援 `icon` 欄位，請使用 [Lucide React](https://lucide.dev/icons/) 的名稱，首字母大寫（如：`Zap`, `Lightbulb`, `CheckCircle`）。
+
+### 2. 段落與行數
+* 嚴禁長篇大論。每個 `text` 區塊轉化後的視覺寬度不應超過 3 行。
+* 善用 `callout` 區隔層次感。
+
+### 3. 對比感 (Contrast)
+對於法規修正或撰寫異動，必須使用 `example` 區塊明確標示 `success` (正確/推薦) 與 `error` (錯誤建議)。
+
+### 4. 操作導向
+在 `system_tutorial` 類型中，`action` 欄位應精確到操作行為，例如：「點擊『發文』按鈕」或「選擇『普通件』選項」。
+
+---
+
+## 🚀 AI Agent 執行範例 (Workflow Example)
+
+當被要求「撰寫一篇關於擬稿規範的文章」時，你的產出應如下：
+
+1.  **選擇類型**: `guide`
+2.  **結構規劃**: 
+    - `summary`: 擬稿三原則：簡、明、確。
+    - `text`: 解釋擬稿的重要性。
+    - `example`: 提供舊式公文與新式白話公文的對比。
+    - `callout (tip)`: 提醒字級大小要求。
+    - `table`: 列出常用公文用語替代。

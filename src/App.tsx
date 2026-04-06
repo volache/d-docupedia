@@ -95,6 +95,15 @@ export default function App() {
     { id: 'faq', name: '常見問題', icon: HelpCircle, path: '/faq' },
   ];
 
+  const isBespokeArticle = useMemo(() => {
+    if (location.pathname.startsWith('/article/')) {
+      const id = location.pathname.split('/')[2];
+      const article = articles.find(a => a.id === id);
+      return article?.article_type === 'bespoke';
+    }
+    return false;
+  }, [location.pathname, articles]);
+
   if (isAdminPath) {
     return (
       <Suspense fallback={<LoadingSpinner />}>
@@ -110,6 +119,19 @@ export default function App() {
         </Routes>
         <CustomModal />
       </Suspense>
+    );
+  }
+
+  if (isBespokeArticle) {
+    return (
+      <div className="min-h-screen bg-slate-950">
+        <Suspense fallback={<LoadingSpinner />}>
+          <Routes>
+            <Route path="/article/:id" element={<ArticleView />} />
+          </Routes>
+        </Suspense>
+        <CustomModal />
+      </div>
     );
   }
 

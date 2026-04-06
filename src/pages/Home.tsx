@@ -65,6 +65,15 @@ export const HomeView = () => {
   if (hour >= 12 && hour < 18) greeting = '午安';
   if (hour >= 18) greeting = '晚安';
 
+  const subGreetings = [
+    '精準用詞，掌握規範，讓公文處理事半功倍。',
+    '公文不是枷鎖，而是行政溝通的精煉藝術。',
+    '今天想了解哪方面的公文知識？我們已為您準備好最新指南。',
+    '由淺入深掌握公文心法，行政效能從此與眾不同。',
+    '公文知識庫是您在行政汪洋中的指南針，點擊開始探索。'
+  ];
+  const subGreeting = useMemo(() => subGreetings[Math.floor(Math.random() * subGreetings.length)], []);
+
   return (
     <div className="space-y-12 pb-12">
       {/* Header Section */}
@@ -75,7 +84,7 @@ export const HomeView = () => {
       >
         <div className="flex-1">
           <h1 className="text-3xl font-bold text-slate-900 mb-2">{greeting}！歡迎來到公文知識庫</h1>
-          <p className="text-slate-500">今日也是提升行政效能的好時機，歡迎查閱最新公文規範</p>
+          <p className="text-slate-500">{subGreeting}</p>
         </div>
       </motion.div>
 
@@ -92,18 +101,34 @@ export const HomeView = () => {
             <motion.div 
               className="absolute right-[-10%] top-[-10%] w-2/3 h-full opacity-10 pointer-events-none"
               animate={{ 
-                x: [0, 20, -20, 0],
-                y: [0, -30, 10, 0],
-                rotate: [0, 5, -5, 0]
+                x: [0, 60],
+                y: [0, -40],
+                rotate: [0, 8],
+                scale: [1, 1.05]
               }}
               transition={{ 
-                duration: 25, 
+                duration: 40, 
                 repeat: Infinity, 
-                ease: "linear" 
+                repeatType: "mirror",
+                ease: "easeInOut" 
               }}
             >
               <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" className="w-full h-full fill-brand-900">
-                <path d="M45.7,-76.1C58.9,-69.3,69.2,-55.4,77.2,-40.5C85.2,-25.6,90.9,-9.8,88.7,5.2C86.5,20.2,76.4,34.4,65.3,46.5C54.2,58.6,42.1,68.6,28.1,74.3C14.1,80,-1.8,81.4,-16.8,78.2C-31.8,75,-45.9,67.2,-57.4,56.1C-68.9,45,-77.8,30.6,-82.1,14.8C-86.4,-1,-86.1,-18.2,-79.5,-33.1C-72.9,-48,-60,-60.6,-45.4,-66.8C-30.8,-73,-15.4,-72.8,0.8,-74C17,-75.2,34,-77.8,45.7,-76.1Z" transform="translate(100 100) scale(1.1)" />
+                <motion.path 
+                  animate={{
+                    d: [
+                      "M45.7,-76.1C58.9,-69.3,69.2,-55.4,77.2,-40.5C85.2,-25.6,90.9,-9.8,88.7,5.2C86.5,20.2,76.4,34.4,65.3,46.5C54.2,58.6,42.1,68.6,28.1,74.3C14.1,80,-1.8,81.4,-16.8,78.2C-31.8,75,-45.9,67.2,-57.4,56.1C-68.9,45,-77.8,30.6,-82.1,14.8C-86.4,-1,-86.1,-18.2,-79.5,-33.1C-72.9,-48,-60,-60.6,-45.4,-66.8C-30.8,-73,-15.4,-72.8,0.8,-74C17,-75.2,34,-77.8,45.7,-76.1Z",
+                      "M35.6,-61.7C48.2,-54.6,58.6,-43.8,66.4,-31.2C74.3,-18.6,79.5,-4.2,77.8,9.2C76.1,22.7,67.5,35.2,56.8,45.8C46.1,56.4,33.3,65,19.2,70C5,75.1,-10.5,76.6,-25,72.6C-39.5,68.7,-53,59.3,-62.4,47C-71.8,34.7,-77.2,19.6,-78,4C-78.7,-11.6,-74.8,-27.7,-65.8,-40.6C-56.7,-53.4,-42.4,-63,-28.4,-68.8C-14.4,-74.5,-0.7,-76.5,14.6,-74.6C23,-73.6,30.3,-68.8,35.6,-61.7Z"
+                    ]
+                  }}
+                  transition={{
+                    duration: 35,
+                    repeat: Infinity,
+                    repeatType: "mirror",
+                    ease: "easeInOut"
+                  }}
+                  transform="translate(100 100) scale(1.15)" 
+                />
               </svg>
             </motion.div>
 

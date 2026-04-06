@@ -198,7 +198,7 @@ export const FaqManager = () => {
           </motion.div>
         ) : (
           <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} key="edit" className="space-y-6">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between sticky top-16 z-40 bg-slate-50/80 backdrop-blur-md py-4 transition-all">
               <button onClick={handleBackToList} className="flex items-center gap-2 text-slate-500 hover:text-slate-900 font-bold transition-colors">
                 <ChevronLeft size={20} /> 返回列表
               </button>

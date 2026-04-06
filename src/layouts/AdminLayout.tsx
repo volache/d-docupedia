@@ -10,7 +10,7 @@ export const AdminLayout = () => {
     <div className="flex bg-slate-50 min-h-screen">
       <AdminSidebar />
       <div className="flex-1 flex flex-col min-w-0">
-        <header className="h-16 border-b border-slate-200 bg-white sticky top-0 z-30 flex items-center justify-between px-8">
+        <header className="h-16 border-b border-slate-200 bg-white sticky top-0 z-50 flex items-center justify-between px-8">
           <div className="flex items-center gap-4 flex-1">
              <div className="relative max-w-sm w-full group">
                <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-brand-500" />
