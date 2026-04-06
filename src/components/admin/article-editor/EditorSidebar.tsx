@@ -98,6 +98,19 @@ export const EditorSidebar: React.FC<EditorSidebarProps> = ({
         />
      </div>
 
+     <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
+        <div className="flex flex-col gap-1">
+          <label className="text-xs font-black text-slate-800 uppercase tracking-widest">機敏資料保護</label>
+          <p className="text-[10px] text-slate-400 font-medium italic">標記為內部公文，需通行碼閱覽</p>
+        </div>
+        <button 
+          onClick={() => updateArticleField({ is_internal: !currentArticle.is_internal })}
+          className={`w-12 h-6 rounded-full transition-all duration-300 flex items-center px-1 ${currentArticle.is_internal ? 'bg-brand-500' : 'bg-slate-200'}`}
+        >
+          <div className={`w-4 h-4 bg-white rounded-full shadow-sm transition-transform duration-300 ${currentArticle.is_internal ? 'translate-x-6' : 'translate-x-0'}`} />
+        </button>
+     </div>
+
      <div className="flex gap-3 p-4 bg-brand-50/50 rounded-2xl border border-brand-100">
         <AlertCircle size={18} className="text-brand-500 shrink-0" />
         <p className="text-[10px] text-brand-700 leading-relaxed font-medium">切換佈局會保留已有內容，但預覽時僅會顯示對應類型的資料欄位。</p>

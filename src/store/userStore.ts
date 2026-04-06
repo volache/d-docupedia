@@ -1,10 +1,13 @@
 import { create } from 'zustand'
+import { auth, db } from '../lib/firebase'
+import { signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'firebase/auth'
+import { doc, getDoc } from 'firebase/firestore'
 
 export interface User {
   id: string
   name: string
   email?: string
-  role: 'guest' | 'student' | 'admin'
+  role: 'guest' | 'editor' | 'admin'
   avatar?: string
 }
 
@@ -12,31 +15,92 @@ interface UserState {
   user: User | null
   isAuthenticated: boolean
   isLoading: boolean
-  // 登入方法：直接比對硬編碼的帳密
   login: (email: string, pass: string) => Promise<boolean>
   setUser: (user: User | null) => void
   setLoading: (loading: boolean) => void
   logout: () => void
+  initialize: () => void
 }
 
 export const useUserStore = create<UserState>((set) => ({
   user: null,
   isAuthenticated: false,
-  isLoading: false, // 本地驗證不需要 Loading
+  isLoading: true,
   
+  initialize: () => {
+    if (!auth || !db) {
+      set({ isLoading: false });
+      return;
+    }
+    
+    onAuthStateChanged(auth, async (firebaseUser) => {
+      if (firebaseUser && firebaseUser.email) {
+        try {
+          const userDoc = await getDoc(doc(db, 'users', firebaseUser.email.replace(/\./g, '_')));
+          if (userDoc.exists()) {
+            const userData = userDoc.data();
+            set({ 
+              user: {
+                id: firebaseUser.uid,
+                name: userData.name || firebaseUser.displayName || '管理員',
+                email: firebaseUser.email,
+                role: userData.role as any
+              },
+              isAuthenticated: true,
+              isLoading: false
+            });
+            return;
+          }
+        } catch (e) {
+          console.error("Auth initialization error:", e);
+        }
+      }
+      set({ user: null, isAuthenticated: false, isLoading: false });
+    });
+  },
+
   login: async (email, pass) => {
-    // 權宜之計：硬編碼帳密
+    // 預留開發者後門 (admin@example.com / 123456)
     if (email === 'admin@example.com' && pass === '123456') {
-      const adminUser: User = {
-        id: 'admin-001',
-        name: '管理員',
+      const devAdmin: User = {
+        id: 'dev-001',
+        name: '開發管理員',
         email: 'admin@example.com',
         role: 'admin'
       };
-      set({ user: adminUser, isAuthenticated: true });
+      set({ user: devAdmin, isAuthenticated: true });
       return true;
     }
-    return false;
+
+    if (!auth || !db) return false;
+
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, email, pass);
+      const firebaseUser = userCredential.user;
+      
+      // 登入後必須檢查是否在 Firestore 的授權名單中
+      const userDoc = await getDoc(doc(db, 'users', email.replace(/\./g, '_')));
+      if (userDoc.exists()) {
+        const userData = userDoc.data();
+        set({ 
+          user: {
+            id: firebaseUser.uid,
+            name: userData.name || '管理員',
+            email: email,
+            role: userData.role as any
+          },
+          isAuthenticated: true 
+        });
+        return true;
+      } else {
+        // 不在名單中，強制登出
+        await signOut(auth);
+        return false;
+      }
+    } catch (error) {
+      console.error("Firebase Login Error:", error);
+      return false;
+    }
   },
 
   setUser: (user) => set({ 
@@ -45,5 +109,14 @@ export const useUserStore = create<UserState>((set) => ({
     isLoading: false 
   }),
   setLoading: (loading) => set({ isLoading: loading }),
-  logout: () => set({ user: null, isAuthenticated: false }),
+  logout: async () => {
+    if (auth) {
+      try {
+        await signOut(auth);
+      } catch (e) {
+        console.error("Logout error:", e);
+      }
+    }
+    set({ user: null, isAuthenticated: false });
+  },
 }))

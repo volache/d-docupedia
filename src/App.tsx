@@ -17,6 +17,7 @@ const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboard').then(m 
 const ArticleManager = lazy(() => import('./pages/admin/ArticleManager').then(m => ({ default: m.ArticleManager })));
 const DictionaryManager = lazy(() => import('./pages/admin/DictionaryManager').then(m => ({ default: m.DictionaryManager })));
 const FaqManager = lazy(() => import('./pages/admin/FaqManager').then(m => ({ default: m.FaqManager })));
+const UserManager = lazy(() => import('./pages/admin/UserManager').then(m => ({ default: m.UserManager })));
 import { CustomModal } from './components/ui/CustomModal';
 
 const LoadingSpinner = () => (
@@ -118,10 +119,15 @@ export default function App() {
   const [searchQuery, setSearchQuery] = useState('');
   
   const { articles, loading, setArticles, setLoading } = useArticleStore();
-  const { user, isAuthenticated, isLoading, logout } = useUserStore();
+  const { user, isAuthenticated, isLoading, logout, initialize } = useUserStore();
   
   const location = useLocation();
   const isAdminPath = location.pathname.startsWith('/admin');
+
+  // 初始化 Auth 狀態
+  useEffect(() => {
+    initialize();
+  }, [initialize]);
 
   // Firestore 資料同步 (不依賴 Auth)
   useEffect(() => {
@@ -191,7 +197,7 @@ export default function App() {
             <Route path="dictionary" element={<DictionaryManager />} />
             <Route path="faqs" element={<FaqManager />} />
             <Route path="analytics" element={<div className="p-20 text-center text-slate-400">數據分析模組開發中</div>} />
-            <Route path="users" element={<UserManagerPlaceholder />} />
+            <Route path="users" element={<UserManager />} />
           </Route>
         </Routes>
         <CustomModal />

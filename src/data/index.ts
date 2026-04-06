@@ -13,6 +13,7 @@ export interface Article {
   promo_title?: string;
   promo_description?: string;
   views?: number;
+  is_internal?: boolean;
 }
 
 export interface Category {

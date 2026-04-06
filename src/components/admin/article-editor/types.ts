@@ -48,4 +48,5 @@ export interface Article {
   views?: number;
   promo_title?: string;
   promo_description?: string;
+  is_internal?: boolean;
 }
